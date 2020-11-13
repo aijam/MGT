@@ -18,7 +18,6 @@ namespace MGT
         public virtual DbSet<t_AGVPath> t_AGVPath { get; set; }
         public virtual DbSet<t_AGVStationDef> t_AGVStationDef { get; set; }
         public virtual DbSet<t_AGVWork> t_AGVWork { get; set; }
-        public virtual DbSet<t_AGVWork2> t_AGVWork2 { get; set; }
         public virtual DbSet<t_AGVWorkHist> t_AGVWorkHist { get; set; }
         public virtual DbSet<t_Code> t_Code { get; set; }
 

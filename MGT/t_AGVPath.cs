@@ -37,6 +37,11 @@ namespace MGT
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int AvailableStatus { get; set; }
 
+        [Key]
+        [Column(Order = 6)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int ChannelType { get; set; }
+
         public DateTime? ModifyTime { get; set; }
     }
 }

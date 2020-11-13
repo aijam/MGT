@@ -15,5 +15,8 @@ namespace MGT
 
         [StringLength(10)]
         public string name { get; set; }
+
+        [StringLength(10)]
+        public string code { get; set; }
     }
 }
