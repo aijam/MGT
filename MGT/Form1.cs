@@ -54,95 +54,43 @@ namespace MGT
             abc(2);
         }
 
-        //更新界面颜色,更改对应货位的颜色
-        private void updateGUIStationStautus(t_Station agvStation2, int occupiedStatus)
+        private void updateGUIStationStautus(Control cc)
         {
-            int stationNo = agvStation2.StationNo;
-            if (stationNo == 101 && occupiedStatus == 0)
-            {
-                button_101.BackColor = Color.WhiteSmoke;
-            }
-            if (stationNo == 102 && occupiedStatus == 0)
-            {
-                button_102.BackColor = Color.WhiteSmoke;
-            }
-            if (stationNo == 103 && occupiedStatus == 0)
-            {
-                button_103.BackColor = Color.WhiteSmoke;
-            }
-            if (stationNo == 104 && occupiedStatus == 0)
-            {
-                button_104.BackColor = Color.WhiteSmoke;
-            }
-            if (stationNo == 105 && occupiedStatus == 0)
-            {
-                button_105.BackColor = Color.WhiteSmoke;
-            }
-            if (stationNo == 106 && occupiedStatus == 0)
-            {
-                button_106.BackColor = Color.WhiteSmoke;
-            }
-            if (stationNo == 107 && occupiedStatus == 0)
-            {
-                button_107.BackColor = Color.WhiteSmoke;
-            }
 
-            if (stationNo == 101 && occupiedStatus == 1)
+            using (var ctx = new AMSContext())
             {
-                button_101.BackColor = Color.Yellow;
-            }
-            if (stationNo == 102 && occupiedStatus == 1)
-            {
-                button_102.BackColor = Color.Yellow;
-            }
-            if (stationNo == 103 && occupiedStatus == 1)
-            {
-                button_103.BackColor = Color.Yellow;
-            }
-            if (stationNo == 104 && occupiedStatus == 1)
-            {
-                button_104.BackColor = Color.Yellow;
-            }
-            if (stationNo == 105 && occupiedStatus == 1)
-            {
-                button_105.BackColor = Color.Yellow;
-            }
-            if (stationNo == 106 && occupiedStatus == 1)
-            {
-                button_106.BackColor = Color.Yellow;
-            }
-            if (stationNo == 107 && occupiedStatus == 1)
-            {
-                button_107.BackColor = Color.Yellow;
-            }
+                foreach (System.Windows.Forms.Control control in cc.Controls)
+                {
+                    if (control is System.Windows.Forms.Button)
+                    {
+                        System.Windows.Forms.Button btn = (System.Windows.Forms.Button)control;
+                        if (btn.Text != "Reset")
+                        {
+                            int stationNo = int.Parse(btn.Text);
+                            t_Station agvStation = ctx.t_Station
+                                  .Where(b => b.StationNo == stationNo)
+                                  .SingleOrDefault();
 
-            if (stationNo == 101 && occupiedStatus == 2)
-            {
-                button_101.BackColor = Color.Blue;
-            }
-            if (stationNo == 102 && occupiedStatus == 2)
-            {
-                button_102.BackColor = Color.Blue;
-            }
-            if (stationNo == 103 && occupiedStatus == 2)
-            {
-                button_103.BackColor = Color.Blue;
-            }
-            if (stationNo == 104 && occupiedStatus == 2)
-            {
-                button_104.BackColor = Color.Blue;
-            }
-            if (stationNo == 105 && occupiedStatus == 2)
-            {
-                button_105.BackColor = Color.Blue;
-            }
-            if (stationNo == 106 && occupiedStatus == 2)
-            {
-                button_106.BackColor = Color.Blue;
-            }
-            if (stationNo == 107 && occupiedStatus == 2)
-            {
-                button_107.BackColor = Color.Blue;
+                            if (agvStation.OccupiedStatus == 0)
+                            {
+                                btn.BackColor = Color.WhiteSmoke;
+                            }
+                            else if (agvStation.OccupiedStatus == 1)
+                            {
+                                btn.BackColor = Color.Yellow;
+                            }
+                            else if (agvStation.OccupiedStatus == 2)
+                            {
+                                btn.BackColor = Color.Blue;
+                            }
+                        }
+
+                        if (control.Controls.Count > 0)
+                        {
+                            updateGUIStationStautus(control);
+                        }
+                    }
+                }
             }
         }
 
@@ -176,7 +124,6 @@ namespace MGT
             {
                 t_AGVWork agvWork1 = new t_AGVWork
                 {
-                    JobId = getMaxID(),
                     JobType = 0,
                     Origination = agvStation1.StationNo,
                     Destination = agvStation2.StationNo,
@@ -193,7 +140,7 @@ namespace MGT
                 if (createTask(agvWork1))
                 {
                     //更新界面颜色,将对应货位的颜色改为黄色(预约中）
-                    updateGUIStationStautus(agvStation1, 1);
+                    //updateGUIStationStautus(agvStation1, 1);
 
                     stationRelease = false;
                     checkbox_stationRelease.Checked = false; //站台不可再接收其他的搬运指令
@@ -245,6 +192,11 @@ namespace MGT
                     ctx.t_AGVWork.Add(agvWork2); //插入agv作业任务
                     ctx.SaveChanges();
 
+                    agvWork2.JobId = agvWork2.ID;
+                    var setEntry = ((IObjectContextAdapter)ctx).ObjectContext.ObjectStateManager.GetObjectStateEntry(agvWork2);
+                    setEntry.SetModifiedProperty("JobId");
+                    ctx.SaveChanges();
+
                     //更新站台状态为预约
                     agvStation1 = ctx.t_Station
                     .Where(b => b.StationNo == agvWork2.Destination)
@@ -253,10 +205,10 @@ namespace MGT
                     agvStation1.ModifyProgID = 101;
                     agvStation1.ModifyTime = DateTime.Now;
                     ctx.t_Station.Attach(agvStation1);
-                    var setEntry = ((IObjectContextAdapter)ctx).ObjectContext.ObjectStateManager.GetObjectStateEntry(agvStation1);
-                    setEntry.SetModifiedProperty("OccupiedStatus");
-                    setEntry.SetModifiedProperty("ModifyProgID");
-                    setEntry.SetModifiedProperty("ModifyTime");
+                    var setEntry1 = ((IObjectContextAdapter)ctx).ObjectContext.ObjectStateManager.GetObjectStateEntry(agvStation1);
+                    setEntry1.SetModifiedProperty("OccupiedStatus");
+                    setEntry1.SetModifiedProperty("ModifyProgID");
+                    setEntry1.SetModifiedProperty("ModifyTime");
                     ctx.SaveChanges();
 
                     transaction.Commit();
@@ -325,8 +277,8 @@ namespace MGT
 
                         if (agvStations1 == null || agvStations1.Count > 0)
                         {
-                            toolStripStatusLabel1.Text = "找到空的站台 "+ agvStation1.StationNo + " ，但是前面站台" + agvStations1.First().StationNo + "有托盘";
-                            Console.WriteLine(DateTime.Now.ToString() + "getAvailabeStation 找到空的站台 " + agvStation1.StationNo + " ，但是前面站台"+ agvStations1.First().StationNo + "有托盘");
+                            toolStripStatusLabel1.Text = "找到空的站台 " + agvStation1.StationNo + " ，但是前面站台" + agvStations1.First().StationNo + "有托盘";
+                            Console.WriteLine(DateTime.Now.ToString() + "getAvailabeStation 找到空的站台 " + agvStation1.StationNo + " ，但是前面站台" + agvStations1.First().StationNo + "有托盘");
                             return null;
                         }
                     }
@@ -340,7 +292,7 @@ namespace MGT
                     return null;
                 }
             }
-            
+
         }
 
         //查询货位状态
@@ -440,15 +392,15 @@ namespace MGT
                 int stationNo = int.Parse(button.Text);
                 List<t_AGVWork> agvWorks = ctx.t_AGVWork
                 .Where(b => b.Destination == stationNo || b.Origination == stationNo)
-                .ToList();       
+                .ToList();
 
                 if (agvWorks != null && agvWorks.Count > 0)
                 {
-                    Console.WriteLine(DateTime.Now + " button_Handler: 站台："+ button.Text + "有作业任务，无法修改站台状态");
+                    Console.WriteLine(DateTime.Now + " button_Handler: 站台：" + button.Text + "有作业任务，无法修改站台状态");
                     toolStripStatusLabel1.Text = DateTime.Now + " button_Handler: 站台：" + button.Text + "有作业任务，无法修改站台状态";
                 }
                 else
-                {                    
+                {
                     t_Station tStation7 = ctx.t_Station
                         .Where(b => b.StationNo == stationNo)
                         .SingleOrDefault();
@@ -459,7 +411,7 @@ namespace MGT
                         button.BackColor = Color.Blue;
 
                     }
-                    else if(button.BackColor == Color.Blue)
+                    else if (button.BackColor == Color.Blue)
                     {
                         tStation7.OccupiedStatus = 0;
                         button.BackColor = Color.WhiteSmoke;
@@ -473,10 +425,10 @@ namespace MGT
                     setEntry.SetModifiedProperty("ModifyTime");
                     ctx.SaveChanges();
                 }
-                
+
             }
         }
- 
+
 
         #region 定时任务，定期读取数据库信息，自动更改jobStatus，并更新Station的占用状态OccpiedStatus
         private void timer1_updateJobStatus(object sender)
@@ -539,7 +491,7 @@ namespace MGT
                                 setEntry.SetModifiedProperty("ModifyTime");
                                 ctx.SaveChanges();
 
-                                updateGUIStationStautus(tStation5, 2);
+                                //updateGUIStationStautus(tStation5, 2);
                                 toolStripStatusLabel1.Text = "任务从 " + agvWork1.Origination + " 到 " + agvWork1.Destination + " 已经正常完成，站台 " + tStation5.StationNo + " 当前已有托盘";
                             }
                             else
@@ -606,21 +558,8 @@ namespace MGT
         //定时任务-按照t_Station 表状态更新界面颜色
         private void timer3_GUIStationStautus(object sender)
         {
-            if (autoUpdateJobStatus)
-            {
-                using (var ctx = new AMSContext())
-                {
-                    //read
-                    List<t_Station> agvStations = ctx.t_Station
-                    .ToList();
-
-                    foreach (t_Station tStation6 in agvStations)
-                    {
-                        updateGUIStationStautus(tStation6, tStation6.OccupiedStatus);
-                    }
-                }
-            }
-
+            updateGUIStationStautus(groupBox1);
+            updateGUIStationStautus(groupBox2);
         }
 
         private void button_opc_connection_test_Click(object sender, EventArgs e)
@@ -632,7 +571,7 @@ namespace MGT
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString()+ "无法连接PLC");
+                MessageBox.Show(ex.ToString() + "无法连接PLC");
             }
         }
 
@@ -646,7 +585,7 @@ namespace MGT
             {
                 autoUpdateJobStatus = false;
             }
-        } 
+        }
 
 
         private void stationRelease_CheckedChanged(object sender, EventArgs e)
@@ -688,7 +627,8 @@ namespace MGT
                     checkbox_stationRelease.Checked = false;
                     checkbox_stationRelease.Enabled = false;
                     stationRelease = false;
-                } else
+                }
+                else
                 {
                     checkbox_stationRelease.Checked = true;
                     checkbox_stationRelease.Enabled = true;
@@ -711,14 +651,17 @@ namespace MGT
                     if (palletA && palletB)
                     {
                         MessageBox.Show("未提供正确的物料类型，请联系输送机厂商");
-                    } else
+                    }
+                    else
                     {
                         if (palletA)
                         {
                             abc(1);
                         }
                         else if (palletB)
-                        { abc(2); }
+                        {
+                            abc(2);
+                        }
                     }
                 }
                 catch (Exception err)
@@ -738,8 +681,8 @@ namespace MGT
             }
             else
             {
-                Console.WriteLine(DateTime.Now + " PalletA signal alive,bug ignore");
-                toolStripStatusLabel1.Text = DateTime.Now + " PalletA signal alive,bug ignore";
+                Console.WriteLine(DateTime.Now + " PLC signal received and ignore, because station is not ready for pick-up");
+                toolStripStatusLabel1.Text = DateTime.Now + " PLC signal received and ignore, because station is not ready for pick-up";
             }
 
         }
@@ -763,7 +706,8 @@ namespace MGT
             if (channelNo == 10000)
             {
                 channelName = "A";
-            } else
+            }
+            else
             {
                 channelName = "B";
             }
