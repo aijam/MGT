@@ -121,7 +121,7 @@
   <data name="pallet" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pallet.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="输送机" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="conveyor" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\输送机.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="jh_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -138,5 +138,8 @@
   </data>
   <data name="pallet_gray" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\pallet-gray.PNG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="doubt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\doubt.PNG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

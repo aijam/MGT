@@ -63,9 +63,29 @@ namespace MGT.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap conveyor {
+            get {
+                object obj = ResourceManager.GetObject("conveyor", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap conveyor_gray {
             get {
                 object obj = ResourceManager.GetObject("conveyor_gray", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap doubt {
+            get {
+                object obj = ResourceManager.GetObject("doubt", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -116,16 +136,6 @@ namespace MGT.Properties {
         internal static System.Drawing.Bitmap pallet_gray {
             get {
                 object obj = ResourceManager.GetObject("pallet_gray", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
-        /// </summary>
-        internal static System.Drawing.Bitmap 输送机 {
-            get {
-                object obj = ResourceManager.GetObject("输送机", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

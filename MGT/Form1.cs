@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Threading;
 using OpcUaHelper;
+using System.Diagnostics;
 
 /*
  @Copyright JUNGHEINRICH V8CN 2020.11.13
@@ -54,6 +55,22 @@ namespace MGT
             abc(2);
         }
 
+
+        //定时更新设备状态的显示，通过读取opc状态，来设置背景图片或取消图片。
+        private void updateGUIDeviceStautus(int stationNo, Boolean connected)
+        {
+            pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
+
+            if (connected)
+            {
+                pictureBox1.BackgroundImage = Properties.Resources.conveyor;
+            }
+            else
+            {
+                pictureBox1.BackgroundImage = Properties.Resources.conveyor_gray;
+            }
+        }
+
         //定时更新station状态的显示，通过读取station表中的occupiedstatus，来设置背景图片或取消图片。
         private void updateGUIStationStautus(Control cc)
         {
@@ -92,6 +109,11 @@ namespace MGT
                                 {
                                     btn.BackgroundImageLayout = ImageLayout.Stretch;
                                     btn.BackgroundImage = Properties.Resources.pallet;
+                                }
+                                else if (agvStation.OccupiedStatus == 3)
+                                {
+                                    btn.BackgroundImageLayout = ImageLayout.Stretch;
+                                    btn.BackgroundImage = Properties.Resources.doubt;
                                 }
                             }
                         }
@@ -226,6 +248,68 @@ namespace MGT
 
                     Console.WriteLine(DateTime.Now.ToString() + " createTask：任务" + agvWork2.ID + " 已创建，站台 " + agvWork2.Destination + " 状态更新为(预约中)");
                     toolStripStatusLabel1.Text = " 从 " + agvWork2.Origination + " 到 " + agvWork2.Destination + " 的搬运任务已创建";
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    Console.WriteLine(DateTime.Now.ToString() + " createTask：失败了，事务回滚");
+                }
+                finally
+                {
+                    transaction.Dispose();
+                }
+            }
+
+            return false;
+        }
+
+        //更新任务，将AGV送到clearing station ProgID 105
+        private Boolean updateTask2Clearing(t_AGVWork agvWork2)
+        {
+            t_Station agvStation1;
+            //更新任务
+            using (var ctx = new AMSContext())
+            {
+                var transaction = ctx.Database.BeginTransaction();
+                try
+                {
+                    agvWork2.ModifyProgID = 105;
+                    agvWork2.ModifyTime = DateTime.Now;
+                    agvWork2.RedirectFlag = 1;
+                    agvWork2.RedirectPosition = 9999;
+                    agvWork2.JobStatus = 61;
+                    ctx.t_AGVWork.Attach(agvWork2);                   
+                    var setEntry = ((IObjectContextAdapter)ctx).ObjectContext.ObjectStateManager.GetObjectStateEntry(agvWork2);
+                    setEntry.SetModifiedProperty("ModifyProgID");
+                    setEntry.SetModifiedProperty("ModifyTime");
+                    setEntry.SetModifiedProperty("RedirectFlag");
+                    setEntry.SetModifiedProperty("RedirectPosition");
+                    setEntry.SetModifiedProperty("JobStatus");
+                    ctx.SaveChanges();
+
+                    //更新新的站台为预约
+
+
+                    //更新站台状态为疑问
+                    agvStation1 = ctx.t_Station
+                    .Where(b => b.StationNo == agvWork2.Destination)
+                    .SingleOrDefault();
+                    agvStation1.OccupiedStatus = 3; //空满状态 0: 空 1:预约中 2:满 3: 存疑
+                    agvStation1.ModifyProgID = 105;
+                    agvStation1.ModifyTime = DateTime.Now;
+                    ctx.t_Station.Attach(agvStation1);
+                    var setEntry1 = ((IObjectContextAdapter)ctx).ObjectContext.ObjectStateManager.GetObjectStateEntry(agvStation1);
+                    setEntry1.SetModifiedProperty("OccupiedStatus");
+                    setEntry1.SetModifiedProperty("ModifyProgID");
+                    setEntry1.SetModifiedProperty("ModifyTime");
+                    ctx.SaveChanges();
+
+                    transaction.Commit();
+
+                    Console.WriteLine(DateTime.Now.ToString() + " updateTask：任务" + agvWork2.ID + " 已更新，站台 " + agvWork2.Destination + " 状态更新为(存疑)");
+                    toolStripStatusLabel1.Text = " 从 " + agvWork2.Origination + " 到 " + agvWork2.Destination + " 的搬运任务已更新";
 
                     return true;
                 }
@@ -462,10 +546,19 @@ namespace MGT
             {
                 return "已占用";
             }
+            else if (agvStation.OccupiedStatus == 3)
+            {
+                return "存疑";
+            }
 
             return "Unknown";
         }
 
+        //在进站卸货前检查站台状态
+        private Boolean checkDestinationStation()
+        {
+            return false;
+        }
 
         #region 定时任务，定期读取数据库信息，自动更改jobStatus，并更新Station的占用状态OccpiedStatus
         private void timer1_updateJobStatus(object sender)
@@ -501,7 +594,16 @@ namespace MGT
                             }
                             else if (agvWork1.JobStatus == 11)
                             {
-                                agvWork1.JobStatus = 12;
+                                //检查站台状态，如果发现站台不可卸货，则修改目的地
+                                if (checkDestinationStation())
+                                {
+                                    agvWork1.JobStatus = 12;
+                                }
+                                else
+                                {
+                                    updateTask2Clearing(agvWork1);
+                                }
+                                
                             }
                             else if (agvWork1.JobStatus == 14)
                             {
@@ -631,18 +733,35 @@ namespace MGT
             {
                 String value = opcUaClient.ReadNode<string>("ns=2;s=AHC.Conveyor.test");
                 //MessageBox.Show(value); // 显示测试数据
-                if (value == "Connection OK" && checkBox_connectedWithOPC.Checked)
+                if (checkBox_connectedWithOPC.Checked)
                 {
-                    connectedWithOPC = true;
-                }
-                else
+                    if (value == "Connection OK")
+                    {
+                        connectedWithOPC = true;
+                        updateGUIDeviceStautus(301, true);
+                        Trace.TraceInformation(DateTime.Now + " 和输送机通讯正常，开始接收消息");
+                        toolStripStatusLabel1.Text = DateTime.Now + " 和输送机通讯正常，开始接收消息";
+                    }
+                    else
+                    {
+                        connectedWithOPC = false;
+                        updateGUIDeviceStautus(301, false); //更新设备状态
+                        checkBox_connectedWithOPC.Checked = false;
+                        MessageBox.Show("无法连接输送机");
+                        Trace.TraceInformation(DateTime.Now + " 无法连接输送机");
+                        toolStripStatusLabel1.Text = DateTime.Now + " 无法连接输送机";
+                    }
+                } else
                 {
                     connectedWithOPC = false;
+                    Trace.TraceInformation(DateTime.Now + " 用户断开与输送机的连接");
+                    toolStripStatusLabel1.Text = DateTime.Now + " 用户断开与输送机的连接";
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString() + "无法连接PLC");
+                connectedWithOPC = false;
+                MessageBox.Show(ex.ToString() + "无法连接输送机");
             }
 
 
@@ -717,8 +836,9 @@ namespace MGT
             }
             else
             {
-                Console.WriteLine(DateTime.Now + " PLC signal received and ignore, because station is not ready for pick-up");
-                toolStripStatusLabel1.Text = DateTime.Now + " PLC signal received and ignore, because station is not ready for pick-up";
+                Trace.TraceInformation(DateTime.Now + " 接收到输送机的信号，但是站台目前已经有任务");
+                toolStripStatusLabel1.Text = DateTime.Now + " 接收到输送机的信号，但是站台目前已经有任务";
+                Trace.Flush();
             }
 
         }
