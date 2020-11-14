@@ -54,6 +54,7 @@ namespace MGT
             abc(2);
         }
 
+        //定时更新station状态的显示，通过读取station表中的occupiedstatus，来设置背景图片或取消图片。
         private void updateGUIStationStautus(Control cc)
         {
 
@@ -64,24 +65,34 @@ namespace MGT
                     if (control is System.Windows.Forms.Button)
                     {
                         System.Windows.Forms.Button btn = (System.Windows.Forms.Button)control;
-                        if (btn.Text != "Reset")
+                        if (btn.Text != "清空")
                         {
                             int stationNo = int.Parse(btn.Text);
                             t_Station agvStation = ctx.t_Station
                                   .Where(b => b.StationNo == stationNo)
                                   .SingleOrDefault();
 
-                            if (agvStation.OccupiedStatus == 0)
+                            if (agvStation.AvailableStatus == 0)
                             {
-                                btn.BackColor = Color.WhiteSmoke;
-                            }
-                            else if (agvStation.OccupiedStatus == 1)
-                            {
-                                btn.BackColor = Color.Yellow;
-                            }
-                            else if (agvStation.OccupiedStatus == 2)
-                            {
-                                btn.BackColor = Color.Blue;
+                                btn.BackgroundImageLayout = ImageLayout.Stretch;
+                                btn.BackgroundImage = Properties.Resources.gray_x;
+                            } else {
+                                if (agvStation.OccupiedStatus == 0)
+                                {
+                                    btn.BackColor = Color.WhiteSmoke;
+                                    //btn.BackgroundImageLayout = ImageLayout.Stretch;
+                                    btn.BackgroundImage = Properties.Resources.empty;
+                                }
+                                else if (agvStation.OccupiedStatus == 1)
+                                {
+                                    btn.BackgroundImageLayout = ImageLayout.Stretch;
+                                    btn.BackgroundImage = Properties.Resources.pallet_gray;
+                                }
+                                else if (agvStation.OccupiedStatus == 2)
+                                {
+                                    btn.BackgroundImageLayout = ImageLayout.Stretch;
+                                    btn.BackgroundImage = Properties.Resources.pallet;
+                                }
                             }
                         }
 
@@ -405,16 +416,19 @@ namespace MGT
                         .Where(b => b.StationNo == stationNo)
                         .SingleOrDefault();
 
-                    if (button.BackColor == Color.WhiteSmoke)
+                    if (tStation7.OccupiedStatus == 0)
                     {
                         tStation7.OccupiedStatus = 2;
-                        button.BackColor = Color.Blue;
-
                     }
-                    else if (button.BackColor == Color.Blue)
+                    else if (tStation7.OccupiedStatus == 2)
                     {
                         tStation7.OccupiedStatus = 0;
-                        button.BackColor = Color.WhiteSmoke;
+                    }
+                    else if (tStation7.OccupiedStatus == 1)
+                    {
+                        Console.WriteLine(DateTime.Now.ToString() + " button_Handler: 货位 " + tStation7.StationNo + "的状态为： 预约，无法修改");
+                        toolStripStatusLabel1.Text = DateTime.Now.ToString() + " button_Handler: 货位 " + tStation7.StationNo + "的状态为： 预约，无法修改";
+                        return;
                     }
 
                     tStation7.ModifyProgID = 104;
@@ -424,9 +438,32 @@ namespace MGT
                     setEntry.SetModifiedProperty("ModifyProgID");
                     setEntry.SetModifiedProperty("ModifyTime");
                     ctx.SaveChanges();
+
+                    updateGUIStationStautus(button); //根据控件名称找到控件，并修改颜色
+
+                    Console.WriteLine(DateTime.Now.ToString() + " button_Handler: 修改货位 "+ tStation7.StationNo + "的状态为" + stationStuatus(tStation7));
+                    toolStripStatusLabel1.Text = DateTime.Now.ToString() + " button_Handler: 修改货位 " + tStation7.StationNo + "的状态为" + stationStuatus(tStation7);
                 }
 
             }
+        }
+
+        private string stationStuatus(t_Station agvStation)
+        {
+            if(agvStation.OccupiedStatus == 0)
+            {
+                return "空闲";
+            }
+            else if (agvStation.OccupiedStatus == 1)
+            {
+                return "预约";
+            }
+            else if (agvStation.OccupiedStatus == 2)
+            {
+                return "已占用";
+            }
+
+            return "Unknown";
         }
 
 
@@ -562,18 +599,6 @@ namespace MGT
             updateGUIStationStautus(groupBox2);
         }
 
-        private void button_opc_connection_test_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                String value = opcUaClient.ReadNode<string>("ns=2;s=AHC.Conveyor.test");
-                MessageBox.Show(value); // 显示测试数据
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString() + "无法连接PLC");
-            }
-        }
 
         private void Timer_CheckedChanged(object sender, EventArgs e)
         {
@@ -602,14 +627,25 @@ namespace MGT
 
         private void checkBox_connectedWithOPC_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox_connectedWithOPC.Checked)
+            try
             {
-                connectedWithOPC = true;
+                String value = opcUaClient.ReadNode<string>("ns=2;s=AHC.Conveyor.test");
+                //MessageBox.Show(value); // 显示测试数据
+                if (value == "Connection OK" && checkBox_connectedWithOPC.Checked)
+                {
+                    connectedWithOPC = true;
+                }
+                else
+                {
+                    connectedWithOPC = false;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                connectedWithOPC = false;
+                MessageBox.Show(ex.ToString() + "无法连接PLC");
             }
+
+
         }
 
         //定时任务-显示当前是否可以接收conveyor的搬送请求，调试时可以禁用;

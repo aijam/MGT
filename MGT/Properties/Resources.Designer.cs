@@ -63,9 +63,9 @@ namespace MGT.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        internal static System.Drawing.Bitmap jh_logo {
+        internal static System.Drawing.Bitmap conveyor_gray {
             get {
-                object obj = ResourceManager.GetObject("jh logo", resourceCulture);
+                object obj = ResourceManager.GetObject("conveyor_gray", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,29 @@ namespace MGT.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
-        internal static System.Drawing.Bitmap jh_logo1 {
+        internal static System.Drawing.Bitmap empty {
             get {
-                object obj = ResourceManager.GetObject("jh logo1", resourceCulture);
+                object obj = ResourceManager.GetObject("empty", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap gray_x {
+            get {
+                object obj = ResourceManager.GetObject("gray_x", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap jh_logo {
+            get {
+                object obj = ResourceManager.GetObject("jh_logo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -86,6 +106,26 @@ namespace MGT.Properties {
         internal static System.Drawing.Bitmap pallet {
             get {
                 object obj = ResourceManager.GetObject("pallet", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap pallet_gray {
+            get {
+                object obj = ResourceManager.GetObject("pallet_gray", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap 输送机 {
+            get {
+                object obj = ResourceManager.GetObject("输送机", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

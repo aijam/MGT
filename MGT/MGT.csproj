@@ -240,6 +240,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="t_AGVCharge.cs" />
     <Compile Include="t_AGVLog.cs" />
     <Compile Include="t_AGVPath.cs" />
@@ -253,14 +258,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="App.Config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -274,13 +274,28 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\pallet.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\jh logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\jh logo1.png" />
+    <None Include="Resources\输送机.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\jh logo.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pallet.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pallet-gray.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\conveyor_gray.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gray-x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\empty.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

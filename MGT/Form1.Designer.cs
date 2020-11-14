@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button_104 = new System.Windows.Forms.Button();
             this.button_107 = new System.Windows.Forms.Button();
@@ -51,16 +52,17 @@
             this.checkbox_Autoupdate = new System.Windows.Forms.CheckBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.checkbox_stationRelease = new System.Windows.Forms.CheckBox();
-            this.button_opc_connection_test = new System.Windows.Forms.Button();
             this.checkBox_connectedWithOPC = new System.Windows.Forms.CheckBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -79,7 +81,7 @@
             this.groupBox1.Size = new System.Drawing.Size(602, 116);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "A";
+            this.groupBox1.Text = "地堆区域 - A";
             // 
             // button_104
             // 
@@ -150,11 +152,11 @@
             // Btn_Reset_Channel_A
             // 
             this.Btn_Reset_Channel_A.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Btn_Reset_Channel_A.Location = new System.Drawing.Point(526, 0);
+            this.Btn_Reset_Channel_A.Location = new System.Drawing.Point(526, 8);
             this.Btn_Reset_Channel_A.Name = "Btn_Reset_Channel_A";
             this.Btn_Reset_Channel_A.Size = new System.Drawing.Size(67, 28);
             this.Btn_Reset_Channel_A.TabIndex = 8;
-            this.Btn_Reset_Channel_A.Text = "Reset";
+            this.Btn_Reset_Channel_A.Text = "清空";
             this.Btn_Reset_Channel_A.UseVisualStyleBackColor = true;
             this.Btn_Reset_Channel_A.Click += new System.EventHandler(this.Btn_Reset_Channel_A_Click);
             // 
@@ -185,7 +187,7 @@
             this.groupBox2.Size = new System.Drawing.Size(602, 116);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "B";
+            this.groupBox2.Text = "地堆区域 - B";
             // 
             // button14
             // 
@@ -245,11 +247,11 @@
             // Btn_Reset_Channel_B
             // 
             this.Btn_Reset_Channel_B.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Btn_Reset_Channel_B.Location = new System.Drawing.Point(526, 0);
+            this.Btn_Reset_Channel_B.Location = new System.Drawing.Point(526, 9);
             this.Btn_Reset_Channel_B.Name = "Btn_Reset_Channel_B";
             this.Btn_Reset_Channel_B.Size = new System.Drawing.Size(66, 27);
             this.Btn_Reset_Channel_B.TabIndex = 9;
-            this.Btn_Reset_Channel_B.Text = "Reset";
+            this.Btn_Reset_Channel_B.Text = "清空";
             this.Btn_Reset_Channel_B.UseVisualStyleBackColor = true;
             this.Btn_Reset_Channel_B.Click += new System.EventHandler(this.Btn_Reset_Channel_B_Click);
             // 
@@ -282,7 +284,7 @@
             this.CallA.Name = "CallA";
             this.CallA.Size = new System.Drawing.Size(78, 67);
             this.CallA.TabIndex = 11;
-            this.CallA.Text = "Call A";
+            this.CallA.Text = "托盘A";
             this.CallA.UseVisualStyleBackColor = true;
             this.CallA.Click += new System.EventHandler(this.CallA_Click);
             // 
@@ -293,7 +295,7 @@
             this.CallB.Name = "CallB";
             this.CallB.Size = new System.Drawing.Size(78, 67);
             this.CallB.TabIndex = 12;
-            this.CallB.Text = "Call B";
+            this.CallB.Text = "托盘B";
             this.CallB.UseVisualStyleBackColor = true;
             this.CallB.Click += new System.EventHandler(this.CallB_Click);
             // 
@@ -305,9 +307,9 @@
             this.checkbox_Autoupdate.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkbox_Autoupdate.Location = new System.Drawing.Point(18, 12);
             this.checkbox_Autoupdate.Name = "checkbox_Autoupdate";
-            this.checkbox_Autoupdate.Size = new System.Drawing.Size(95, 21);
+            this.checkbox_Autoupdate.Size = new System.Drawing.Size(75, 21);
             this.checkbox_Autoupdate.TabIndex = 13;
-            this.checkbox_Autoupdate.Text = "Autoupdate";
+            this.checkbox_Autoupdate.Text = "自动更新";
             this.checkbox_Autoupdate.UseVisualStyleBackColor = true;
             this.checkbox_Autoupdate.CheckedChanged += new System.EventHandler(this.Timer_CheckedChanged);
             // 
@@ -327,27 +329,29 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(12, 17);
             this.toolStripStatusLabel1.Text = " ";
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::MGT.Properties.Resources.jh_logo1;
-            this.pictureBox2.Location = new System.Drawing.Point(406, -2);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(210, 35);
-            this.pictureBox2.TabIndex = 17;
-            this.pictureBox2.TabStop = false;
-            // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.pictureBox1);
             this.groupBox3.Controls.Add(this.CallA);
             this.groupBox3.Controls.Add(this.checkbox_stationRelease);
             this.groupBox3.Controls.Add(this.CallB);
             this.groupBox3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.groupBox3.Location = new System.Drawing.Point(0, 39);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(195, 100);
+            this.groupBox3.Size = new System.Drawing.Size(602, 100);
             this.groupBox3.TabIndex = 18;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Conveyor";
+            this.groupBox3.Text = "输送机";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.Location = new System.Drawing.Point(186, 27);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(406, 67);
+            this.pictureBox1.TabIndex = 21;
+            this.pictureBox1.TabStop = false;
             // 
             // checkbox_stationRelease
             // 
@@ -363,27 +367,27 @@
             this.checkbox_stationRelease.UseVisualStyleBackColor = true;
             this.checkbox_stationRelease.CheckedChanged += new System.EventHandler(this.stationRelease_CheckedChanged);
             // 
-            // button_opc_connection_test
-            // 
-            this.button_opc_connection_test.Location = new System.Drawing.Point(237, 12);
-            this.button_opc_connection_test.Name = "button_opc_connection_test";
-            this.button_opc_connection_test.Size = new System.Drawing.Size(107, 21);
-            this.button_opc_connection_test.TabIndex = 19;
-            this.button_opc_connection_test.Text = "PLC通讯测试";
-            this.button_opc_connection_test.UseVisualStyleBackColor = true;
-            this.button_opc_connection_test.Click += new System.EventHandler(this.button_opc_connection_test_Click);
-            // 
             // checkBox_connectedWithOPC
             // 
             this.checkBox_connectedWithOPC.AutoSize = true;
             this.checkBox_connectedWithOPC.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.checkBox_connectedWithOPC.Location = new System.Drawing.Point(119, 12);
             this.checkBox_connectedWithOPC.Name = "checkBox_connectedWithOPC";
-            this.checkBox_connectedWithOPC.Size = new System.Drawing.Size(110, 21);
+            this.checkBox_connectedWithOPC.Size = new System.Drawing.Size(87, 21);
             this.checkBox_connectedWithOPC.TabIndex = 21;
-            this.checkBox_connectedWithOPC.Text = "Connecte OPC";
+            this.checkBox_connectedWithOPC.Text = "连接输送机";
             this.checkBox_connectedWithOPC.UseVisualStyleBackColor = true;
             this.checkBox_connectedWithOPC.CheckedChanged += new System.EventHandler(this.checkBox_connectedWithOPC_CheckedChanged);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
+            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox2.Location = new System.Drawing.Point(396, -2);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(210, 35);
+            this.pictureBox2.TabIndex = 17;
+            this.pictureBox2.TabStop = false;
             // 
             // Form1
             // 
@@ -391,7 +395,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(609, 403);
             this.Controls.Add(this.checkBox_connectedWithOPC);
-            this.Controls.Add(this.button_opc_connection_test);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.statusStrip1);
@@ -404,9 +407,10 @@
             this.groupBox2.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -439,9 +443,9 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button button_opc_connection_test;
         private System.Windows.Forms.CheckBox checkbox_stationRelease;
         private System.Windows.Forms.CheckBox checkBox_connectedWithOPC;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
