@@ -128,7 +128,7 @@ namespace MGT
         }
 
         //触发任务
-        private Boolean triggerTask(int callButtonSignal, int stationNo)
+        private Boolean triggerTask(int materialType, int stationNo)
         {
             t_AGVPath agvPath1;
             t_Station agvStation1;
@@ -141,12 +141,12 @@ namespace MGT
                 .Where(b => b.StationNo == stationNo)
                 .SingleOrDefault();
 
-                agvPath1 = getPath(agvStation1, callButtonSignal);
+                agvPath1 = getPath(agvStation1, materialType);
             }
 
             if (agvPath1 == null)
             {
-                Console.WriteLine(DateTime.Now.ToString() + " triggerTask：根据" + agvStation1.StationNo + " 和拉动信号类型 " + callButtonSignal + " 找不到对应的路径");
+                Console.WriteLine(DateTime.Now.ToString() + " triggerTask：根据" + agvStation1.StationNo + " 和拉动信号类型 " + materialType + " 找不到对应的路径");
                 return false;
             }
 
@@ -363,11 +363,11 @@ namespace MGT
                 {
                     agvStation1 = agvStations.First();
 
-                    //对于FIFO，需要考虑AGV是否能进这个站台
+                    //对于FIFO，需要考虑AGV是否能进这个站台，通过查看此站台前面几个站台是否有托盘，或者预约了托盘
                     if (agvStation1.ChannelType == 0 || agvStation1.ChannelType == 1)
                     {
                         List<t_Station> agvStations1 = ctx.t_Station
-                        .Where(b => b.Sequence > agvStation1.Sequence && b.OccupiedStatus != 0)
+                        .Where(b => b.Sequence > agvStation1.Sequence && b.OccupiedStatus != 0 && b.ChannelNo == agvPath1.Destination)
                         .ToList();
 
                         if (agvStations1 == null || agvStations1.Count > 0)
